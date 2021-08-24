@@ -3,12 +3,6 @@ import configparser
 import sys
 
 
-def verify_path_exists(path):
-    if not os.path.exists(path):
-        print(f"The path '{path}' does not exist. Exiting")
-        exit()
-
-
 def update_profile(user, profile):
     # Set to personal directories for ease of use
 
@@ -17,14 +11,14 @@ def update_profile(user, profile):
     verify_path_exists(profile_path)
     verify_path_exists(config_path)
 
-    new_profile_config = configparser.ConfigParser()
-    new_profile_config.optionxform = str
+    new_profile_config = MyConfigParser()
     new_profile_config.read(profile_path)
+    new_profile_config.verify_has_section('Profile')
     new_profile = new_profile_config['Profile']
 
-    to_replace = configparser.ConfigParser()
-    to_replace.optionxform = str
+    to_replace = MyConfigParser()
     to_replace.read(config_path)
+    to_replace.verify_has_section('GCPad1')
     to_replace['GCPad1'] = new_profile
 
     with open(config_path, 'w') as configfile:
@@ -38,6 +32,24 @@ def main(args):
         user, profile = input(
             'Load controller config. Format: ${user} ${profile}\n').split()
     update_profile(user, profile)
+
+
+class MyConfigParser(configparser.ConfigParser):
+    def __init__(self):
+        super().__init__()
+        self.optionxform = str
+
+    def verify_has_section(self, section: str) -> bool:
+        if not self.has_section(section):
+            print(
+                f"The section '{section}' does not exist in the config file. Exiting.")
+            exit()
+
+
+def verify_path_exists(path: str) -> bool:
+    if not os.path.exists(path):
+        print(f"The path '{path}' does not exist. Exiting")
+        exit()
 
 
 if __name__ == "__main__":
