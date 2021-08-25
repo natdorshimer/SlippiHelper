@@ -56,10 +56,6 @@ def verify_path_exists(path: str) -> bool:
         exit()
 
 
-def set_window_active(hwnd):
-    win32gui.BringWindowToTop(hwnd)
-
-
 def find_window_wildcard(wildcard):
     handle = None
 
@@ -75,7 +71,7 @@ def find_window_wildcard(wildcard):
 
 def set_window_active(window_name):
     handle = find_window_wildcard(window_name)
-    set_window_active(handle)
+    win32gui.BringWindowToTop(handle)
 
 
 if __name__ == "__main__":
