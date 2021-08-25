@@ -1,6 +1,8 @@
 import os
 import configparser
 import sys
+import win32gui
+import re
 
 
 def update_profile(user, profile):
@@ -31,7 +33,9 @@ def main(args):
     else:
         user, profile = input(
             'Load controller config. Format: ${user} ${profile}\n').split()
+
     update_profile(user, profile)
+    set_window_active(".*| Wrote memory card.*")
 
 
 class MyConfigParser(configparser.ConfigParser):
@@ -50,6 +54,28 @@ def verify_path_exists(path: str) -> bool:
     if not os.path.exists(path):
         print(f"The path '{path}' does not exist. Exiting")
         exit()
+
+
+def set_window_active(hwnd):
+    win32gui.BringWindowToTop(hwnd)
+
+
+def find_window_wildcard(wildcard):
+    handle = None
+
+    """Callback that sets handle to the first window that matches the wildcard"""
+    def find_matching_window(hwnd, wildcard):
+        if re.match(wildcard, str(win32gui.GetWindowText(hwnd))) is not None:
+            nonlocal handle
+            handle = hwnd
+
+    win32gui.EnumWindows(find_matching_window, wildcard)
+    return handle
+
+
+def set_window_active(window_name):
+    handle = find_window_wildcard(window_name)
+    set_window_active(handle)
 
 
 if __name__ == "__main__":
