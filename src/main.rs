@@ -2,7 +2,6 @@
 
 use configparser::ini::Ini;
 use std::env;
-use std::io;
 
 fn update_profile(user: &String, profile: &String) {
     let mut config = Ini::new_cs();
@@ -37,13 +36,4 @@ fn main() {
     let user = args.get(1).expect(error_msg);
     let profile = args.get(2).expect(error_msg);
     update_profile(user, profile);
-}
-
-pub fn get_line(message: &str) -> String {
-    println!("{}", message);
-    let mut input = String::new();
-    io::stdin()
-        .read_line(&mut input)
-        .map(|_| input.trim_end().to_string())
-        .expect("Error parsing input. Exiting.")
 }
