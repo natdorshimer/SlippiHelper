@@ -8,6 +8,3 @@ edition = "2018"
 
 [dependencies]
 configparser = "2.1.0"
-windows = "0.18.0"
-bindings = { path = "bindings" }
-regex = "1"

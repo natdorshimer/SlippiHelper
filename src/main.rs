@@ -1,10 +1,8 @@
-mod windowhelper;
+#![windows_subsystem = "windows"]
 
 use configparser::ini::Ini;
-use regex::Regex;
 use std::env;
 use std::io;
-use windowhelper::set_window_active;
 
 fn update_profile(user: String, profile: String) {
     let mut config = Ini::new_cs();
@@ -53,7 +51,6 @@ fn main() {
     };
 
     update_profile(user, profile);
-    set_window_active(Regex::new(".*| Wrote memory card.*").expect("Error parsing regex"))
 }
 
 pub fn get_line(message: &str) -> String {
