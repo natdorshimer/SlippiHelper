@@ -20,9 +20,7 @@ fn update_profile(user: String, profile: String) {
         .load(&config_path)
         .expect(format!("No config file found at path {}", &config_path).as_str());
 
-    config
-        .get_mut_map()
-        .insert(String::from("GCPad1"), profile.to_owned());
+    config.get_mut_map().insert(String::from("GCPad1"), profile);
 
     config.write(&config_path).expect(
         format!(
